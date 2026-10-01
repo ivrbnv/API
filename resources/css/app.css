@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* Color Palette */
+    --text-dark: #0D1821; /* Text colour for lighter sections */
+    --text-grey: #344966; /* Default text colour */
+    --background: #ffffff; /* Main page background */
+    --background-box: #34495E; /* Background for sections with text */
+
+    --button-bg: #9EE493; /* Colour of the button */
+    --button-bg-hover: #7eda70; /* Darker shade for hover effect - testing*/
+    --button-text: var(--text-dark); /* using the colour for lighter sections */
+
+    /* Typography */
+    --base-font: "Poppins", sans-serif;
+    --base-font-size: 1.19rem;
+    --headline-size: 4rem;
+    --subline-large: 1.75rem;
+    --subline-medium: 1.56rem;
+    --section-title-size: 3.37rem;
+}
+@layer base {
+    
+    body {
+        font-family: var(--base-font);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        color: var(--text-grey); /* All text uses the dark text variable */
+        background-color: var(--background);
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+    scroll-behavior: smooth;
+    }
+}
+@layer components {
+
+    .site-header {
+        background-color: var(--background);
+        color: var(--text-grey); /* Override text color for dark background */
+        padding: 1.5rem 1rem;
+    }
+
+
+    .button:hover {
+        background-color: var(--button-bg-hover);
+    }
+
+
+    html {
+    scroll-behavior: smooth;
+    }
+}
