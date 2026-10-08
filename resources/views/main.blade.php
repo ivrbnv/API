@@ -1,519 +1,150 @@
-<link rel="stylesheet" href="{{ asset('css/apps.css') }}">
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Record a voice sample</title>
+    <meta name="description" content="We measure your charisma from a voice sample you submit. It takes less than 5 minutes.">
 
-    :root{
-        --base-font: "Poppins", sans-serif;
-        --base-font-size: 1.19rem;
-        --headline-size: 4rem;
-        --subline-large: 1.75rem;
-        --subline-medium: 1.56rem;
-        --section-title-size: 3.37rem;
-    }
+    <link href="https://fonts.bunny.net/css?family=roboto:400,500,700|rubik:500,600" rel="stylesheet">
+    @vite(['resources/css/app.css'])
 
-    @media (max-width: 1024px) {
+    {{-- Colour placeholders: swap in the real values from your original CSS --}}
+    <style>
         :root {
-        --headline-size: 3rem;
-        --subline-large: 1.3rem;
-        --subline-medium: 1.15rem;
-        --section-title-size: 2.7rem;
+            --main: #4f5665;
+            --java: #1ea69b;
+            --mango: #fdd695;
+            --grey: #4f5665;
+            --surface: #f8f9fa;
+            --footer: #0b1220;
         }
-    }
+        body { font-family: "Roboto", system-ui, sans-serif; }
+        .font-display { font-family: "Rubik", system-ui, sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
 
+@php
+    $ideal = ['1–3 minutes long', 'Recorded at a normal volume', 'Spoken as freely as possible', 'Your natural way of speaking'];
+    $avoid = ['Dialogues between people', 'Background or interfering noise', 'Very quiet recordings', 'Very loud recordings'];
+    $notes = [
+        'Ideally, choose a topic or situation that best reflects your personal speaking or presenting style.',
+        'We analyse how your recording sounds. The content of your voice sample is not evaluated.',
+    ];
+@endphp
 
-    @media (max-width: 640px) {
-        :root {
-        --headline-size: 2.2rem;
-        --subline-large: 1rem;
-        --subline-medium: 0.95rem;
-        --section-title-size: 2rem;
-        }
-    }
+{{-- Navigation (mobile menu uses a CSS-only checkbox toggle) --}}
+<header class="relative bg-white shadow-md">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <a href="{{ url('/') }}"><img src="{{ asset('images/logo-dark.svg') }}" alt="Logo" width="149" height="29"></a>
 
-    @media (max-width: 640px) {
-    .button {
-            padding: 0.75rem 1.5rem;
-            font-size: 1.25rem;
-        }
-    }
+        <input type="checkbox" id="nav-toggle" class="peer sr-only">
+        <label for="nav-toggle" class="cursor-pointer rounded p-2 hover:bg-gray-100 xl:hidden">
+            <span class="sr-only">Toggle navigation</span>
+            <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </label>
 
-    @media (max-width: 640px) {
-    .spacing-section2,
-    .spacing-section3 {
-            min-height: auto;
-            padding: 4rem;
-        }
-    }
+        <ul class="absolute left-0 top-full z-20 hidden w-full flex-col items-center bg-white py-4 shadow-md
+                   peer-checked:flex xl:static xl:flex xl:w-auto xl:flex-row xl:py-0 xl:shadow-none">
+            @foreach (['Analysis', 'Seminars', 'News', 'About us', 'Train the Trainer'] as $label)
+                <li><a href="#" class="block px-3 py-2 text-gray-600 hover:text-gray-900">{{ $label }}</a></li>
+            @endforeach
+        </ul>
+    </nav>
+</header>
 
-    @media (max-width: 640px) {
-        .headline {
-            line-height: 1.2;
-        }
-        .content-text {
-            line-height: 1.5;
-        }
-    }
+<main>
+    {{-- Hero --}}
+    <section class="bg-gradient-to-b from-white to-[var(--surface)]">
+        <div class="mx-auto grid max-w-6xl items-end gap-8 px-4 pt-12 lg:grid-cols-2">
+            <div class="self-center pb-8">
+                <h1 class="font-display mb-3 text-4xl font-semibold leading-tight">How do I record a suitable voice sample?</h1>
+                <p class="text-[var(--grey)]">
+                    We measure your charisma from a voice sample you submit. Further down this page you can record a sample
+                    or upload one. The whole process takes less than five minutes.
+                </p>
+            </div>
+            <img src="{{ asset('images/avp.png') }}" alt="" class="h-auto w-full max-w-lg justify-self-center lg:order-2">
+        </div>
+    </section>
 
-    .headline {
-        font-size: var(--headline-size);
-        font-family: Poppins, sans-serif;
-        text-align: center;
-        color: var(--text-dark);
-        line-height: 1.1;
-
-    }
-
-    .subline1,
-    .subline2 {
-        text-align: center;
-        font-family: Poppins, sans-serif;
-        margin-top: 1.87rem;
-        font-weight: 400;
-    }
-
-    .subline1 { font-size: var(--subline-large); }
-    .subline2 { font-size: var(--subline-medium); }
-    
-
-    .button {
-        background-color: #9EE493;
-        /*width: 30%;*/
-        padding: 1rem 2rem;
-        border-radius: 0.5rem;
-        font-size: 1.56rem;
-        font-family: Poppins, sans-serif;
-        margin-top: 1.87rem;
-        text-align: center;
-        font-weight: 500;
-        color: var(--text-dark);
-    }
-
-    .button-spacing {
-        display: flex;
-        justify-content: center;
-    }
-
-    .spacing-home {
-        /*max-width: 90rem;*/
-        justify-content: center;
-        margin-top: 4.37rem;
-        padding: 0 5%;
-        /*min-height: 75vh;*/
-    }
-
-    .section-title{
-        font-size: 3.37rem;
-        font-family: Poppins, sans-serif;
-        text-align: center;
-        color: var(--text-dark);
-        padding:0 5%;
-    }
-
-    .spacing-section2 {
-            justify-content: center;
-            padding: 0 5%;
-            min-height: auto;
-            padding-top: 2.5rem;
-        }
-
-    .content-text{
-        font-size: var(--base-font-size);
-        font-family: Poppins, sans-serif;
-        margin-top: 1.87rem;
-        text-align: justify;
-        font-weight: 400;
-    }
-
-    .spacing-section3 {
-        justify-content: center;
-        padding: 0 19%;
-        min-height: auto;
-        padding-top: 2.5rem;
-    }
-
-    .why-feature-section {
-        font-size: 1.19rem;
-        font-family: Poppins, sans-serif;
-        margin-top: 1.87rem;
-        text-align: justify;
-        font-weight: 400;
-    }
-
-    .why-feature-title {
-        font-size: 1.44rem;
-        font-weight: 400;
-        color: var(--text-dark);
-        text-align: left;
-        font-family: var(--base-font);
-    }
-
-    .why-feature-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 1.75rem;
-    }
-
-    .why-feature-list li {
-        position: relative;
-        padding-left: 2rem; /* space for the checkmark */
-        margin-bottom: 1rem;
-        font-size: 1.19rem;
-        font-family: var(--base-font);
-        text-align: justify;
-        font-weight: 400;
-        color: var(--text-grey);
-        line-height: 1.6;
-    }
-
-    /* Green checkmark before each item */
-    .why-feature-list li::before {
-        content: "✓";
-        position: absolute;
-        left: 0;
-        top: 0;
-        color: var(--button-bg, #9EE493);
-        font-weight: 600;
-        font-size: 1.19rem;
-        line-height: 1.2;
-    }
-
-
-
-</style>
-
-
-<x-app-layout>
-    <x-slot name="header">
-        <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            @include('partials.navbar')
-        </h1>
-    </x-slot>
-    <div class="spacing-home min-h-[75vh] sm:min-h-screen md:min-h-[60vh] lg:min-h-[80vh] py-8">
-        <div class="grid gap-8 grid-cols-1 md:grid-cols-2 pt-20 items-start text-left">
-            <!--- Card Why -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 transition-shadow mt-7">
-                <p class="text-2xl">Tracked speech parameters: </p>
-                <ul class="why-feature-list">
-                    <li><strong>Pitch variability -</strong> how expressive or monotone you sound</li>
-                    <li><strong>Pitch level -</sstrong> is your voice too low or too high?</li>
-                    <li><strong>Pauses & pace -</strong> timing, rhythm, and clarity</li>
-                    <li><strong>Resonance (mouth openness) -</strong> articulation clarity</li>
-                    <li><strong>Energy -</strong> how strong or weak your voice feels</li>
-                </ul>
-                <hr class="border-gray-300 my-6">
-                    <p class="text-2xl pt-5 text-[var(--text-dark)]">🤖 Natural reactions</p>
-                    <p class="text-xl pt-5">To make practice more realistic, the robot:</p>
-                    <ul class="why-feature-list">
-                        <li>Follows your movement as you speak</li>
-                        <li>Nods when performance improves (Red → Yellow → Green)</li>
-                        <li>Tilts its head when quality slightly drops (Green → Yellow)</li>
+    {{-- Do / avoid / notes --}}
+    <section class="bg-[var(--surface)] pt-8">
+        <div class="mx-auto max-w-6xl px-4">
+            <div class="grid gap-x-10 md:grid-cols-2">
+                <div class="mb-10">
+                    <h2 class="font-display mb-3 text-2xl font-semibold">The ideal voice sample</h2>
+                    <ul class="space-y-2">
+                        @foreach ($ideal as $item)
+                            <li class="flex items-center gap-3 rounded-xl bg-[var(--java)] p-4 text-white shadow-sm">
+                                <img src="{{ asset('images/circle_check.svg') }}" alt="" class="size-5 shrink-0">{{ $item }}
+                            </li>
+                        @endforeach
                     </ul>
-            </div>
-        <div class="headline">
-            <p>How do I create a suitable voice sample?</p>
-        </div>
-
-        <div class="subline2 max-w-4xl mx-auto">
-            <p>We measure your charisma based on a voice sample you submit. 
-                Further down the page, you can record or upload a voice sample. 
-                The entire process can be completed in under five minutes.</p>
-        </div>
-
-        <div class="button-spacing">
-            <div class="button mt-20">
-                <a href="#how-it-works"> &#9654; See how it works! </a>
-            </div>
-        </div>
-    </div>
-
-    {{-- Second view --}}
-
-    <div class = "spacing-section3">
-        <section id="what-is-it" class="what-section">
-        <h2 class="section-title">A smarter way to practice your speaking skills.</h2>
-            <p class="subline2">
-                Audience Reactor is an interactive robot that listens, analyses, and reacts to your speech just like a true audience would!  
-                It helps you improve your delivery, pacing, and confidence in a stress-free way.
-            </p>
-            <div class="cards grid gap-8 grid-cols-1 md:grid-cols-3 mt-20 text-center text-xl">
-                <div class="card ">
-                    <div class="icon1 justify-center flex">
-                        <img src="/images/1.svg" width="100" height="100" alt="Speak icon" />
-                    </div>
-                    <h3 class="card-title1 mt-5 text-[var(--text-dark)] text-2xl">SPEAK</h3>
-                    <p class="card-text1 mt-5">Rehearse your speech in front of Audience Reactor</p>
                 </div>
-
-                <div class="card">
-                    <div class="icon2 justify-center flex">
-                        <img src="/images/2.svg" width="100" height="100" alt="React icon" />
-                    </div>
-                    <h3 class="card-title2 mt-5 text-[var(--text-dark)] text-2xl">REACT</h3>
-                    <p class="card-text2 mt-5">See feedback live and improve while speaking</p>
-                </div>
-
-                <div class="card">
-                    <div class="icon3 justify-center flex">
-                        <img src="/images/3.svg" width="100" height="100" alt="Improve icon" />
-                    </div>
-                    <h3 class="card-title3 mt-5 text-[var(--text-dark)] text-2xl">IMPROVE</h3>
-                    <p class="card-text3 mt-5">Review your speech and get performance insights</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    {{-- Third view --}}
-
-    <div class = "spacing-section3">
-        <section id="why-it-matters" class="why-section">
-        <h2 class="section-title">Why it matters? </h2>
-            <p class="content-text">
-                Speaking clearly and confidently can open doors  in education, business, and everyday life. 
-                Yet most of us practice alone and rarely receive any meaningful feedback about how we sound. 
-                Without knowing what works and what doesn’t, we keep repeating the same habits, feel unsure about our delivery, and walk into presentations stressed and unprepared.            </p>
-            <p class="content-text">   
-                Audience Reactor changes that. It turns practice into real progress by showing how your delivery is perceived while you rehearse. 
-                Instead of guessing, you get simple, supportive cues that help you adjust, improve, and build confidence step by step.
-            </p>
-        </section>
-
-        <section class="why-feature-section">
-            <h2 class="why-feature-title">With Audience Reactor, you can:</h2>
-            <ul class="why-feature-list">
-                <li>Know what works and what doesn’t while you practice.</li>
-                <li>Refine your tone, pace, and clarity with improvement suggestions.</li>
-                <li>Build confidence so anxiety no longer holds you back.</li>
-                <li>Make every speech more engaging and effective, whether it's a work presentation, pitch, or class talk.</li>
-            </ul>
-        </section>
-
-        <div class="mt-20">
-            <h2 class="why-feature-title text-center text-4xl">Your message deserves to be heard!
-                Practice smarter, speak with confidence, and deliver with impact.</h2>
-            <div class="button-spacing mt-10">
-                <div class="button">
-                    <a href="{{ route('register') }}"> Try Audience Reactor today! &#8594 </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Fourth View --}}
-
-    <section class="h-auto lg:min-h-screen pt-10 flex flex-col justify-center max-w-6xl mx-auto px-6 text-center">
-        <h2 class="text-center text-[1.87rem] md:text-[1.87rem] font-normal text-[var(--text-dark)] font-[Poppins] pb-20">            "Good speakers inspire, lead, and connect. 
-            Whether you're presenting at university, pitching a startup, or teaching others to communicate —
-            great delivery makes all the difference. 
-            Audience Reactor helps you find your authentic voice, practice with purpose, and perform with confidence."
-        </h2>
-
-        <div class="grid gap-8 grid-cols-1 md:grid-cols-3">
-            <!-- Card 1 -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 hover:shadow-md transition-shadow">
-            <span class="text-3xl text-green-500">“</span>
-            <p class="text-[var(--text-grey)] mt-2 mb-4 leading-relaxed">
-                Audience Reactor helped me overcome my fear of public speaking. The real-time feedback gave me confidence I never had before.
-            </p>
-            <p class="text-sm font-medium text-gray-500">— University Student</p>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 hover:shadow-md transition-shadow">
-            <span class="text-3xl text-green-500">“</span>
-            <p class="text-[var(--text-grey)] mt-2 mb-4 leading-relaxed">
-                As a startup founder, practicing my pitch with Audience Reactor made a huge difference. I landed my seed funding!
-            </p>
-            <p class="text-sm font-medium text-gray-500">— Startup Founder</p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 hover:shadow-md transition-shadow">
-            <span class="text-3xl text-green-500">“</span>
-            <p class="text-[var(--text-grey)] mt-2 mb-4 leading-relaxed">
-                The judgment-free environment let me experiment and find my authentic speaking style. Game changer for educators.
-            </p>
-            <p class="text-sm font-medium text-gray-500">— Teacher</p>
-            </div>
-        </div>
-    </section>
-
-    {{--Fifth View --}}
-
-    <section id="how-it-works" class="how-section h-auto lg:min-h-screen pt-10 flex flex-col justify-center max-w-6xl mx-auto px-5 text-center">
-       <h2 class="section-title"> How it works? </h2>
-        <p class="subline2">
-                Audience Reactor analyses short segments of your speech and reacts 
-                like a real listener using face expressions, colours, light-up icons and movement to show how your delivery feels.
-        </p>
-        <div class="grid gap-8 grid-cols-1 md:grid-cols-2 pt-20 items-start text-left">
-            <!--- Card Why -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 transition-shadow mt-7">
-                <p class="text-2xl">Tracked speech parameters: </p>
-                <ul class="why-feature-list">
-                    <li><strong>Pitch variability -</strong> how expressive or monotone you sound</li>
-                    <li><strong>Pitch level -</strong> is your voice too low or too high?</li>
-                    <li><strong>Pauses & pace -</strong> timing, rhythm, and clarity</li>
-                    <li><strong>Resonance (mouth openness) -</strong> articulation clarity</li>
-                    <li><strong>Energy -</strong> how strong or weak your voice feels</li>
-                </ul>
-                <!-- <hr class="border-gray-300 my-6">
-                    <p class="text-2xl pt-5 text-[var(--text-dark)]">🤖 Natural reactions</p>
-                    <p class="text-xl pt-5">To make practice more realistic, the robot:</p>
-                    <ul class="why-feature-list">
-                        <li>Follows your movement as you speak</li>
-                        <li>Nods when performance improves (Red → Yellow → Green)</li>
-                        <li>Tilts its head when quality slightly drops (Green → Yellow)</li>
-                    </ul>-->
-            </div>
-
-            <!-- Card How -->
-            <!--<div>
-                <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 border border-black-100 transition-shadow mt-7">
-                    <p class="text-2xl text-[var(--text-dark)]">Visual Feedback</p>
-                        <p class="text-xl pt-5">Audience Reactor gives feedback through:</p>
-                        <p class="text-xl pt-5 text-[var(--text-dark)]">4 facial expressions</p>
-
-                        <ul class="space-y-4 pt-5">
-                            <li class="flex items-center">
-                                <span class="text-3xl mr-3">😊</span>
-                                <div class="flex flex-col leading-tight">
-                                    <span>Happy</span>
-                                    <p class="text-sm text-gray-400">Strong delivery</p>
-                                </div>
+                <div class="mb-10">
+                    <h2 class="font-display mb-3 text-2xl font-semibold">What to avoid</h2>
+                    <ul class="space-y-2">
+                        @foreach ($avoid as $item)
+                            <li class="flex items-center gap-3 rounded-xl bg-[var(--mango)] p-4 font-bold shadow-sm">
+                                <img src="{{ asset('images/off_close.svg') }}" alt="" class="size-5 shrink-0">{{ $item }}
                             </li>
-                            <li class="flex items-center">
-                                <span class="text-3xl mr-3">🤔</span>
-                                <div class="flex flex-col leading-tight">
-                                    <span>Confused</span>
-                                    <p class="text-sm text-gray-400">Average clarity or rhythm</p>
-                                </div>
-                            </li>
-                            <li class="flex items-center">
-                                <span class="text-3xl mr-3">😴</span>
-                                <div class="flex flex-col leading-tight">
-                                    <span>Sleepy</span>
-                                    <p class="text-sm text-gray-400">Too flat, quiet, or slow</p>
-                                </div>
-                            </li>
-                            <li class="flex items-center">
-                                <span class="text-3xl mr-3">😰</span>
-                                <div class="flex flex-col leading-tight">
-                                    <span>Overwhelmed</span>
-                                    <p class="text-sm text-gray-400">Too fast, loud, or intense</p>
-                                </div>
-                            </li>
-                        </ul>
-
-                    <hr class="border-gray-300 my-6">
-                    
-                    <p class="text-xl pt-5 text-[var(--text-dark)]">3 Body Colours</p>
-                    <ul class="space-y-4 pt-5">
-                        <li class="flex items-start">
-                        <div class="flex-shrink-0 w-8 h-8 mr-3 mt-1 rounded-full bg-green-500"></div>
-                        <span>Green — strong performance</span>
-                        </li>
-                        <li class="flex items-start">
-                        <div class="flex-shrink-0 w-8 h-8 mr-3 mt-1 rounded-full bg-yellow-500"></div>
-                        <span>Yellow — moderate performance</span>
-                        </li>
-                        <li class="flex items-start">
-                        <div class="flex-shrink-0 w-8 h-8 mr-3 mt-1 rounded-full bg-red-500"></div>
-                        <span>Red — needs improvement</span>
-                        </li>
+                        @endforeach
                     </ul>
-                    <p class="text-xl pt-5">The robot also highlights your weakest parameter so you know exactly what to adjust.</p>
                 </div>
             </div>
-            -->
-        
-            <!-- Card Bottom -->
-            <div class="bg-[#EDF2F4] rounded-2xl shadow-sm p-6 px-10 border border-black-100 transition-shadow mt-7 md:col-span-2">
-                <p class="text-2xl text-[var(--text-dark)]">📊 After your practice</p>
-                <p class="text-xl pt-5">Once you finish, you can see on the website:</p>
-                <ul class="why-feature-list">
-                    <li>Your overall performance score</li>
-                    <li>A breakdown of each speech parameter</li>
-                    <li>Clear suggestions on what to improve</li>
+
+            <div class="pb-12">
+                <h2 class="font-display mb-3 text-2xl font-semibold">Please note</h2>
+                <ul class="grid gap-2 md:grid-cols-2">
+                    @foreach ($notes as $item)
+                        <li class="flex items-center gap-3 rounded-xl bg-[var(--main)] p-4 text-white shadow-sm">
+                            <img src="{{ asset('images/circle_info.svg') }}" alt="" class="size-5 shrink-0">{{ $item }}
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </div>
     </section>
 
-    {{--Sixth View --}}
-
-    <section id="practice" class="how-section h-auto lg:min-h-screen pt-10 flex flex-col justify-center max-w-6xl mx-auto px-5">
-       <h2 class="section-title"> How to practice? </h2>
-       <p class="subline2">
-            Rehearsing with Audience Reactor is simple. Just speak naturally and let the robot guide you.
-        </p>
-        <div class="max-w-xl mx-auto px-4 py-10">
-            <ol class="space-y-8">
-                <!-- Each step -->
-                <li class="flex items-start space-x-4">
-                <!-- Number circle -->
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#344966] text-white flex items-center justify-center font-semibold">
-                    1
-                </div>
-                <!-- Text content -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Log in</h3>
-                    <p class="text-sm text-gray-500">Access your practice dashboard.</p>
-                </div>
-                </li>
-
-                <li class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#344966] text-white flex items-center justify-center font-semibold">
-                    2
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Start your session</h3>
-                    <p class="text-sm text-gray-500">Begin when you're ready to practice.</p>
-                </div>
-                </li>
-
-                <!-- Repeat for other items -->
-                <li class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#344966] text-white flex items-center justify-center font-semibold">
-                    3
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Present as you normally would</h3>
-                    <p class="text-sm text-gray-500">The robot listens and reacts through colours, facial expressions, and movement.</p>
-                </div>
-                </li>
-
-                <li class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#344966] text-white flex items-center justify-center font-semibold">
-                    4
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Watch the feedback while you speak</h3>
-                    <p class="text-sm text-gray-500">Its reactions help you adjust pacing, clarity, and expressiveness on the spot.</p>
-                </div>
-                </li>
-
-                <li class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#344966] text-white flex items-center justify-center font-semibold">
-                    5
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Check your results afterward</h3>
-                    <p class="text-sm text-gray-500">Get a clear summary of your performance and see what you can improve next.</p>
-                </div>
-                </li>
-            </ol>
-
-            <div class="button-spacing">
-                <div class="button">
-                    <a href="{{ route('register') }}"> Start practicing today &#8594 </a> 
-                </div>
-            </div> 
-
-            <!-- Small note -->
-            <p class="mt-4 text-center text-xs text-gray-400">
-                Sign up for free and improve your speaking skills with real-time feedback
-            </p>
+    {{-- Call to action --}}
+    <section id="start" class="bg-[var(--surface)] pb-24 pt-4">
+        <div class="mx-auto max-w-6xl px-4">
+            <div class="flex justify-center rounded-xl bg-white p-8 shadow-sm">
+                <a href="#" {{-- point this at your recording form route --}}
+                   class="rounded-lg bg-[var(--java)] px-6 py-3 text-sm font-medium uppercase tracking-wide text-white shadow-md transition hover:brightness-110">
+                    Continue to recording
+                </a>
+            </div>
+            <div class="mt-8 max-w-xl">
+                <span class="font-display inline-block rounded bg-[var(--java)] px-2 py-1 text-white">Still have questions?</span>
+                <p class="my-2 text-[var(--grey)]">
+                    We're happy to help you record a voice sample. The best way to reach us is by email
+                    (<a href="mailto:contact@allgoodspeakers.com" class="underline">contact@allgoodspeakers.com</a>).
+                </p>
+            </div>
         </div>
     </section>
+</main>
 
-</x-app-layout>
+{{-- Footer --}}
+<footer class="bg-[var(--footer)] text-gray-300">
+    <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:flex-row md:justify-between">
+        <div>
+            <img src="{{ asset('images/logo-white.svg') }}" alt="Logo" width="240" height="46" loading="lazy">
+            <a href="https://www.allgoodspeakers.com/" target="_blank" rel="noopener" class="mt-3 block text-sm hover:text-white">
+                A project of AllGoodSpeakers ApS
+            </a>
+        </div>
+        <ul class="space-y-1 text-sm">
+            <li><a class="hover:text-white" href="#">Legal notice</a></li>
+            <li><a class="hover:text-white" href="#">Privacy policy</a></li>
+            <li><a class="hover:text-white" href="mailto:contact@allgoodspeakers.com">Contact</a></li>
+        </ul>
+    </div>
+    <div class="border-t border-white/10 px-4 py-4 text-center text-sm text-gray-500">&copy; {{ date('Y') }}</div>
+</footer>
+
+</body>
+</html>
